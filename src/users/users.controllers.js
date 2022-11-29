@@ -1,9 +1,9 @@
 
 const Tasks = require('../models/users.models')
 
-
 const findAllUsers = async () => {
     users = await Tasks.findAll()
+    users.sort((a, b) => a.id - b.id)
     return users
 }
 
@@ -34,6 +34,7 @@ const updateUser = async (id, obj) => {
             id: id
         }
     })
+
 }
 
 const deleteUser = async (id) => {

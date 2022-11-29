@@ -1,28 +1,35 @@
 const users = require('./users.controllers')
 
 
-const getAllUsers = (res, req) => {
+const getAllUsers = (req, res) => {
     users.findAllUsers()
         .then(data => res.status(200).json(data))
-        .catch(err => res.status(400).json({ message: err.message }))
+        .catch(err => { res.status(400).json({ message: err.message }) })
 }
 
-const getUserById = (res, req) => {
+const getUserById = (req, res) => {
     const id = req.params.id
     users.findUserById(id)
-        .then(data => res.status(200).json(data))
+        .then(data => {
+            if (data) {
+                res.status(200).json(data)
+            }
+            else {
+                res.status(404).json({ message: 'User not found' })
+            }
+        })
         .catch(err => res.status(400).json({ message: err.message }))
 
 }
 
-const postUser = (res, req) => {
+const postUser = (req, res) => {
     const { first_name, last_name, email, password, birthday } = req.body
     users.createUser({ first_name, last_name, email, password, birthday })
         .then(data => res.status(201).json(data))
         .catch(err => res.status(404).json({ message: err.message }))
 
 }
-const patchUser = (res, req) => {
+const patchUser = (req, res) => {
     const id = req.params.id
     const { first_name, last_name, email, password, birthday } = req.body
     users.updateUser(id, { first_name, last_name, email, password, birthday })
@@ -30,10 +37,17 @@ const patchUser = (res, req) => {
         .catch(err => res.status(400).json({ message: err.message }))
 }
 
-const deleteUser = (res, req) => {
+const deleteUser = (req, res) => {
     const id = req.params.id
     users.deleteUser(id)
-        .then(data => res.status(201).json(data))
+        .then(data => {
+            if (data) {
+                res.status(201).json(data)
+            }
+            else {
+                res.status(404).json({ message: 'User not found' })
+            }
+        })
         .catch(err => res.status(404).json({ message: err.message }))
 
 }
